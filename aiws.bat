@@ -187,7 +187,7 @@ goto :eof
 :finish
 powershell wsl -l -v
 echo. 
-echo.
+echo 请务必等待docker服务运行后再继续!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
 echo 请在docker中将Settings\Resources\WSL INTEGRATION\%WSL_FILE%镜像设定为打开状态并应用修改后继续 ...
 echo.
