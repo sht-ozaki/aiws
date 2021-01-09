@@ -129,7 +129,7 @@ echo.
 echo.
 if not exist wsl_update_x64.msi (
 echo 升级WSL2 ...
-wget https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -O wsl_update_x64.msi
+wget  --no-check-certificate https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -O wsl_update_x64.msi
 powershell msiexec /i wsl_update_x64.msi /qn
 echo.
 echo.
@@ -140,7 +140,7 @@ echo.
 if not exist %FILE_NAME% (
 echo 下载 CENTOS FOR WSL 7.0 ...
 echo.
-wget "%FILE_URL%" -O "%FILE_NAME%"
+wget  --no-check-certificate "%FILE_URL%" -O "%FILE_NAME%"
 echo.
 ) 
 if not exist %WSL_FILE%.exe (
@@ -152,7 +152,7 @@ powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CEN
 If not exist DockerDesktopInstaller.exe (
 echo 下载 DOCKER DESKTOP ...
 echo.
-wget "https://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "DockerDesktopInstaller.exe"
+wget  --no-check-certificate "https://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "DockerDesktopInstaller.exe"
 echo.
 echo.
 echo.
