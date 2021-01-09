@@ -123,11 +123,13 @@ reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
 del %~dp0current.txt
 echo.
 echo.
+if not exist wsl_update_x64.msi (
 echo 升级WSL2 ...
 start /wait powershell curl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -o wsl_update_x64.msi
 powershell msiexec /i wsl_update_x64.msi /qn
 echo.
 echo.
+)
 echo 设置wsl默认版本为2
 powershell wsl --set-default-version 2
 echo.
