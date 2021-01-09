@@ -7,6 +7,15 @@ SET WSL_FILE=baota
 SET DOCKERBOTA=https://github.com/dooioomoo/docker-bota.git
 
 
+echo 现在开始准备安装系统环境
+echo .
+echo 主要用于基于Centos和docker的前端开发和后台开发环境
+echo .
+echo 其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等
+echo .
+echo 它需要使用到管理员权限以安装来自微软的官方补丁
+echo 及下载必要的系统组件，请使用或同意脚本的管理身份请求！
+
 if exist "%SystemRoot%\SysWOW64" path %path%;%windir%\SysNative;%SystemRoot%\SysWOW64;%~dp0
 bcdedit >nul
 if '%errorlevel%' NEQ '0' (goto UACPrompt) else (goto UACAdmin)
@@ -26,12 +35,7 @@ goto :eof
 
 setlocal
 :one
-echo 现在开始准备安装系统环境
-echo .
-echo 主要用于基于Centos和docker的前端开发和后台开发环境
-echo .
-echo 其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等
-echo .
+
  
 SET /P AREYOUSURE=是否开始安装 (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
