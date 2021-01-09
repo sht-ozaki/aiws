@@ -118,9 +118,10 @@ goto :eof
 
 
 :two
-::Remove script from Run key
-reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
-del %~dp0current.txt
+::Add script to Run key
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /d %~dpnx0 /f
+echo finish >%~dp0current.txt
+echo -- Section two --
 echo.
 echo.
 if not exist wsl_update_x64.msi (
@@ -167,13 +168,17 @@ echo.
 )
 echo 开始安装docker桌面运行程序 ...
 start /wait DockerDesktopInstaller.exe
+goto :eof
+
+:finish
+::Remove script from Run key
+reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
+del %~dp0current.txt
 echo.
 echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后
 echo 运行 wsl -d %WSL_FILE%,并进入/%WSL_FILE%目录中运行 sh build.sh
 echo 完成宝塔的安装
 pause
-:END
-
 goto :eof
 
 :resume
@@ -182,4 +187,5 @@ if exist %~dp0current.txt (
 ) else (
     set current=one
 )
+:END
 endlocal
