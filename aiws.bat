@@ -152,7 +152,7 @@ powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CEN
 If not exist DockerDesktopInstaller.exe (
 echo 下载 DOCKER DESKTOP ...
 echo.
-wget "http://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "DockerDesktopInstaller.exe"
+wget "https://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "DockerDesktopInstaller.exe"
 echo.
 echo.
 echo.
