@@ -64,6 +64,13 @@ echo.
 echo.
 echo.
 echo.
+echo 正在安装 wget ...
+
+powershell choco install --yes wget
+echo.
+echo.
+echo.
+echo.
 echo 正在安装 composer ...
 
 powershell choco install --yes composer
@@ -126,7 +133,7 @@ echo.
 echo.
 if not exist wsl_update_x64.msi (
 echo 升级WSL2 ...
-start /wait powershell curl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -o wsl_update_x64.msi
+wget https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -O wsl_update_x64.msi
 powershell msiexec /i wsl_update_x64.msi /qn
 echo.
 echo.
@@ -137,14 +144,28 @@ echo.
 if not exist %FILE_NAME% (
 echo 下载 CENTOS FOR WSL 7.0 ...
 echo.
-start /wait powershell curl %FILE_URL% -o %FILE_NAME%
+wget "%FILE_URL%" -O "%FILE_NAME%"
 echo.
 )
-if not exist %WSL_FILE%.exe (
+if exist %WSL_FILE%.exe (
 echo 解压缩 ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
 )
+
+If not exist DockerDesktopInstaller.exe (
+echo 下载 DOCKER DESKTOP ...
+echo.
+wget "http://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "DockerDesktopInstaller.exe"
+echo.
+echo.
+echo.
+)
+
+
+echo 开始安装docker桌面运行程序 ...
+start /wait DockerDesktopInstaller.exe
+
 echo.
 echo 开始安装centos到WSL中 ...
 echo.
@@ -158,23 +179,12 @@ powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd 
 echo.
 echo.
 echo.
-if not exist DockerDesktopInstaller.exe (
-echo 下载 DOCKER DESKTOP ...
-echo.
-start /wait powershell curl https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe -o DockerDesktopInstaller.exe
-echo.
-echo.
-echo.
-)
-echo 开始安装docker桌面运行程序 ...
-start /wait DockerDesktopInstaller.exe
+
+
 goto :finish
 goto :eof
 
 :finish
-::Remove script from Run key
-reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
-del %~dp0current.txt
 echo. 
 echo.
 echo.
@@ -192,6 +202,9 @@ echo.
 echo.
 echo 完成宝塔的安装!
 pause
+::Remove script from Run key
+reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
+del %~dp0current.txt
 goto :eof
 
 :resume
