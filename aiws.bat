@@ -146,12 +146,11 @@ echo 下载 CENTOS FOR WSL 7.0 ...
 echo.
 wget "%FILE_URL%" -O "%FILE_NAME%"
 echo.
-)
-if exist %WSL_FILE%.exe (
+) else (
 echo 解压缩 ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
-)
+) 
 
 If not exist DockerDesktopInstaller.exe (
 echo 下载 DOCKER DESKTOP ...
@@ -160,12 +159,10 @@ wget "http://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "Doc
 echo.
 echo.
 echo.
-)
-
-
+) else (
 echo 开始安装docker桌面运行程序 ...
 start /wait DockerDesktopInstaller.exe
-
+)
 echo.
 echo 开始安装centos到WSL中 ...
 echo.
@@ -173,7 +170,7 @@ powershell .\%WSL_FILE%.exe < nul
 powershell wsl -s %WSL_FILE%
 echo.
 echo.
-echo 开始创建docker基础文件环境 ...
+echo 开始创建docker基础文件环境 ...[%WSL_FILE%.exe]
 echo.
 powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd /%WSL_FILE% && yum install git -y && git clone %DOCKERBOTA%  ./ && cp .env-example .env && mv build.bat build.sh \"
 echo.
@@ -185,6 +182,7 @@ goto :finish
 goto :eof
 
 :finish
+powershell wsl -l -v
 echo. 
 echo.
 echo.
