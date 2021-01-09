@@ -155,6 +155,16 @@ powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd 
 echo.
 echo.
 echo.
+if not exist Docker%20Desktop%20Installer.exe (
+echo 下载 DOCKER DESKTOP ...
+echo.
+start /wait powershell curl https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe -o Docker%20Desktop%20Installer.exe
+echo.
+echo.
+echo.
+)
+start /wait Docker%20Desktop%20Installer.exe
+echo.
 echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后
 echo 运行 wsl -d %WSL_FILE%,并进入/%WSL_FILE%目录中运行 sh build.sh
 echo 完成宝塔的安装
