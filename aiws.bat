@@ -7,14 +7,14 @@ SET WSL_FILE=baota
 SET DOCKERBOTA=https://github.com/dooioomoo/docker-bota.git
 
 
-echo ÏÖÔÚ¿ªÊ¼×¼±¸°²×°ÏµÍ³»·¾³
+echo ç°åœ¨å¼€å§‹å‡†å¤‡å®‰è£…ç³»ç»Ÿç¯å¢ƒ
 echo .
-echo Ö÷ÒªÓÃÓÚ»ùÓÚCentosºÍdockerµÄÇ°¶Ë¿ª·¢ºÍºóÌ¨¿ª·¢»·¾³
+echo ä¸»è¦ç”¨äºåŸºäºCentoså’Œdockerçš„å‰ç«¯å¼€å‘å’Œåå°å¼€å‘ç¯å¢ƒ
 echo .
-echo ÆäÖĞ°üÀ¨WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...µÈ
+echo å…¶ä¸­åŒ…æ‹¬WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...ç­‰
 echo .
-echo ËüĞèÒªÊ¹ÓÃµ½¹ÜÀíÔ±È¨ÏŞÒÔ°²×°À´×ÔÎ¢ÈíµÄ¹Ù·½²¹¶¡
-echo ¼°ÏÂÔØ±ØÒªµÄÏµÍ³×é¼ş£¬ÇëÊ¹ÓÃ»òÍ¬Òâ½Å±¾µÄ¹ÜÀíÉí·İÇëÇó£¡
+echo å®ƒéœ€è¦ä½¿ç”¨åˆ°ç®¡ç†å‘˜æƒé™ä»¥å®‰è£…æ¥è‡ªå¾®è½¯çš„å®˜æ–¹è¡¥ä¸
+echo åŠä¸‹è½½å¿…è¦çš„ç³»ç»Ÿç»„ä»¶ï¼Œè¯·ä½¿ç”¨æˆ–åŒæ„è„šæœ¬çš„ç®¡ç†èº«ä»½è¯·æ±‚ï¼
 
 if exist "%SystemRoot%\SysWOW64" path %path%;%windir%\SysNative;%SystemRoot%\SysWOW64;%~dp0
 bcdedit >nul
@@ -24,8 +24,8 @@ if '%errorlevel%' NEQ '0' (goto UACPrompt) else (goto UACAdmin)
 exit /B
 :UACAdmin
 cd /d "%~dp0"
-echo µ±Ç°ÔËĞĞÂ·¾¶ÊÇ£º%CD%
-echo ÒÑ»ñÈ¡¹ÜÀíÔ±È¨ÏŞ
+echo å½“å‰è¿è¡Œè·¯å¾„æ˜¯ï¼š%CD%
+echo å·²è·å–ç®¡ç†å‘˜æƒé™
 echo .
 echo .
 echo .
@@ -37,74 +37,74 @@ setlocal
 :one
 
  
-SET /P AREYOUSURE=ÊÇ·ñ¿ªÊ¼°²×° (Y/[N])?
+SET /P AREYOUSURE=æ˜¯å¦å¼€å§‹å®‰è£… (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° choco ...
+echo æ­£åœ¨å®‰è£… choco ...
 powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
 choco feature enable -n=allowGlobalConfirmation
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° PHP 7.4 ...
+echo æ­£åœ¨å®‰è£… PHP 7.4 ...
 
 powershell choco install --yes php --version=7.4.14
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° git ...
+echo æ­£åœ¨å®‰è£… git ...
 
 powershell choco install --yes git
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° composer ...
+echo æ­£åœ¨å®‰è£… composer ...
 
 powershell choco install --yes composer
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° Nodejs ...
+echo æ­£åœ¨å®‰è£… Nodejs ...
 
 powershell choco install --yes nodejs --version=14.15.4
 echo.
 echo.
 echo.
 echo.
-echo ÕıÔÚ°²×° VSCODE ...
+echo æ­£åœ¨å®‰è£… VSCODE ...
 
 powershell choco install --yes vscode
 echo.
 echo.
 echo.
-echo ¿ªÊ¼ÆôÓÃWINDOWS¹¦ÄÜ×é¼ş 
+echo å¼€å§‹å¯ç”¨WINDOWSåŠŸèƒ½ç»„ä»¶ 
 echo ===============================
 echo.       
-echo ¿ªÆôĞéÄâ»ú¹¦ÄÜ ...
+echo å¼€å¯è™šæ‹ŸæœºåŠŸèƒ½ ...
 powershell dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 echo.        
-echo ¿ªÆôHyper-V ...
+echo å¼€å¯Hyper-V ...
 powershell dism.exe /online /enable-feature /featurename:HypervisorPlatform /all /norestart
 echo.    
-echo ¿ªÆôWSL ...
+echo å¼€å¯WSL ...
 powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 echo.
 echo.
-echo ¿ªÊ¼ÆôÓÃWINDOWS¹¦ÄÜ×é¼ş 
+echo å¼€å§‹å¯ç”¨WINDOWSåŠŸèƒ½ç»„ä»¶ 
 echo ===============================
 echo.
-echo ¿ªÊ¼ÆôÓÃĞéÄâÆ½Ì¨ ...
+echo å¼€å§‹å¯ç”¨è™šæ‹Ÿå¹³å° ...
 powershell Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
 echo.
 echo.
-echo ¿ªÊ¼ÆôÓÃWSL ...
+echo å¼€å§‹å¯ç”¨WSL ...
 powershell Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 
 ::Add script to Run key
@@ -125,48 +125,48 @@ echo -- Section two --
 echo.
 echo.
 if not exist wsl_update_x64.msi (
-echo Éı¼¶WSL2 ...
+echo å‡çº§WSL2 ...
 start /wait powershell curl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -o wsl_update_x64.msi
 powershell msiexec /i wsl_update_x64.msi /qn
 echo.
 echo.
 )
-echo ÉèÖÃwslÄ¬ÈÏ°æ±¾Îª2
+echo è®¾ç½®wslé»˜è®¤ç‰ˆæœ¬ä¸º2
 powershell wsl --set-default-version 2
 echo.
 if not exist %FILE_NAME% (
-echo ÏÂÔØ CENTOS FOR WSL 7.0 ...
+echo ä¸‹è½½ CENTOS FOR WSL 7.0 ...
 echo.
 start /wait powershell curl %FILE_URL% -o %FILE_NAME%
 echo.
 )
 if not exist %WSL_FILE%.exe (
-echo ½âÑ¹Ëõ ...
+echo è§£å‹ç¼© ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
 )
 echo.
-echo ¿ªÊ¼°²×°centosµ½WSLÖĞ ...
+echo å¼€å§‹å®‰è£…centosåˆ°WSLä¸­ ...
 echo.
 powershell .\%WSL_FILE%.exe < nul
 powershell wsl -s %WSL_FILE%
 echo.
 echo.
-echo ¿ªÊ¼´´½¨docker»ù´¡ÎÄ¼ş»·¾³ ...
+echo å¼€å§‹åˆ›å»ºdockeråŸºç¡€æ–‡ä»¶ç¯å¢ƒ ...
 echo.
 powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd /%WSL_FILE% && yum install git -y && git clone %DOCKERBOTA%  ./ && cp .env-example .env && mv build.bat build.sh \"
 echo.
 echo.
 echo.
 if not exist DockerDesktopInstaller.exe (
-echo ÏÂÔØ DOCKER DESKTOP ...
+echo ä¸‹è½½ DOCKER DESKTOP ...
 echo.
 start /wait powershell curl https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe -o DockerDesktopInstaller.exe
 echo.
 echo.
 echo.
 )
-echo ¿ªÊ¼°²×°docker×ÀÃæÔËĞĞ³ÌĞò ...
+echo å¼€å§‹å®‰è£…dockeræ¡Œé¢è¿è¡Œç¨‹åº ...
 start /wait DockerDesktopInstaller.exe
 goto :finish
 goto :eof
@@ -178,19 +178,19 @@ del %~dp0current.txt
 echo. 
 echo.
 echo.
-echo ÇëÔÚdockerÖĞ½«Settings\Resources\WSL INTEGRATION\%WSL_FILE%¾µÏñÉè¶¨Îª´ò¿ª×´Ì¬²¢Ó¦ÓÃĞŞ¸Äºó¼ÌĞø ...
+echo è¯·åœ¨dockerä¸­å°†Settings\Resources\WSL INTEGRATION\%WSL_FILE%é•œåƒè®¾å®šä¸ºæ‰“å¼€çŠ¶æ€å¹¶åº”ç”¨ä¿®æ”¹åç»§ç»­ ...
 echo.
 echo.
 pause
 echo.
-echo ÔËĞĞ wsl -d %WSL_FILE%,²¢½øÈë/%WSL_FILE%Ä¿Â¼ÖĞÔËĞĞ sh build.sh
+echo è¿è¡Œ wsl -d %WSL_FILE%,å¹¶è¿›å…¥/%WSL_FILE%ç›®å½•ä¸­è¿è¡Œ sh build.sh
 echo.
 echo.
-echo ½øÈëbaota CENTOS»·¾³ ...
+echo è¿›å…¥baota CENTOSç¯å¢ƒ ...
 powershell .\%WSL_FILE%.exe run \"cd /baota && sh build.sh\"
 echo.
 echo.
-echo Íê³É±¦ËşµÄ°²×°!
+echo å®Œæˆå®å¡”çš„å®‰è£…!
 pause
 goto :eof
 
