@@ -168,6 +168,7 @@ echo.
 )
 echo 开始安装docker桌面运行程序 ...
 start /wait DockerDesktopInstaller.exe
+goto :finish
 goto :eof
 
 :finish
@@ -175,9 +176,22 @@ goto :eof
 reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
 del %~dp0current.txt
 echo.
-echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后
+echo.
+echo.
+echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后继续 ...
+echo.
+echo.
+pause
+echo.
 echo 运行 wsl -d %WSL_FILE%,并进入/%WSL_FILE%目录中运行 sh build.sh
-echo 完成宝塔的安装
+echo.
+echo.
+echo 进入baota CENTOS环境 ...
+powershell .\%WSL_FILE%.exe run \"sh build.sh"
+
+echo.
+echo.
+echo 完成宝塔的安装!
 pause
 goto :eof
 
