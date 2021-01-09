@@ -165,11 +165,13 @@ echo.
 echo.
 echo.
 )
+echo 开始安装docker桌面运行程序 ...
 start /wait DockerDesktopInstaller.exe
 echo.
 echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后
 echo 运行 wsl -d %WSL_FILE%,并进入/%WSL_FILE%目录中运行 sh build.sh
 echo 完成宝塔的安装
+pause
 :END
 
 goto :eof
