@@ -111,7 +111,7 @@ powershell Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-
 reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /d %~dpnx0 /f
 echo two >%~dp0current.txt
 echo -- Section one --
-pause
+
 shutdown -r -t 0
 
 goto :eof
