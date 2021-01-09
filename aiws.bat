@@ -125,10 +125,6 @@ goto :eof
 
 
 :two
-::Add script to Run key
-reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /d %~dpnx0 /f
-echo finish >%~dp0current.txt
-echo -- Section two --
 echo.
 echo.
 if not exist wsl_update_x64.msi (
@@ -146,7 +142,8 @@ echo 下载 CENTOS FOR WSL 7.0 ...
 echo.
 wget "%FILE_URL%" -O "%FILE_NAME%"
 echo.
-) else (
+) 
+if not exist %WSL_FILE%.exe (
 echo 解压缩 ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
@@ -159,10 +156,13 @@ wget "http://desktop.docker.com/win/stable/Docker Desktop Installer.exe" -O "Doc
 echo.
 echo.
 echo.
-) else (
+) 
+
+If exist DockerDesktopInstaller.exe (
 echo 开始安装docker桌面运行程序 ...
 start /wait DockerDesktopInstaller.exe
 )
+
 echo.
 echo 开始安装centos到WSL中 ...
 echo.
@@ -177,7 +177,10 @@ echo.
 echo.
 echo.
 
-
+::Add script to Run key
+reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /d %~dpnx0 /f
+echo finish >%~dp0current.txt
+echo -- Section two --
 goto :finish
 goto :eof
 
