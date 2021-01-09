@@ -178,7 +178,7 @@ del %~dp0current.txt
 echo. 
 echo.
 echo.
-echo 请在docker中将wsl关联的%WSL_FILE%镜像设定为打开状态后继续 ...
+echo 请在docker中将Settings\Resources\WSL INTEGRATION\%WSL_FILE%镜像设定为打开状态并应用修改后继续 ...
 echo.
 echo.
 pause
