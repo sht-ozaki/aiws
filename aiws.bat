@@ -13,81 +13,81 @@ goto :eof
 
 setlocal
 :step1
-echo ç°åœ¨å¼€å§‹å‡†å¤‡å®‰è£…ç³»ç»Ÿç¯å¢ƒ
+echo ÏÖÔÚ¿ªÊ¼×¼±¸°²×°ÏµÍ³»·¾³
 echo .
-echo ä¸»è¦ç”¨äºåŸºäºCentoså’Œdockerçš„å‰ç«¯å¼€å‘å’Œåå°å¼€å‘ç¯å¢ƒ
+echo Ö÷ÒªÓÃÓÚ»ùÓÚCentosºÍdockerµÄÇ°¶Ë¿ª·¢ºÍºóÌ¨¿ª·¢»·¾³
 echo .
-echo å…¶ä¸­åŒ…æ‹¬WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...ç­‰
+echo ÆäÖĞ°üÀ¨WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...µÈ
 echo .
  
-SET /P AREYOUSURE=æ˜¯å¦å¼€å§‹å®‰è£… (Y/[N])?
+SET /P AREYOUSURE=ÊÇ·ñ¿ªÊ¼°²×° (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… choco ...
+echo ÕıÔÚ°²×° choco ...
 powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin
 choco feature enable -n=allowGlobalConfirmation
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… PHP 7.4 ...
+echo ÕıÔÚ°²×° PHP 7.4 ...
 
 powershell choco install --yes php --version=7.4.14
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… git ...
+echo ÕıÔÚ°²×° git ...
 
 powershell choco install --yes git
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… composer ...
+echo ÕıÔÚ°²×° composer ...
 
 powershell choco install --yes composer
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… Nodejs ...
+echo ÕıÔÚ°²×° Nodejs ...
 
 powershell choco install --yes nodejs --version=14.15.4
 echo.
 echo.
 echo.
 echo.
-echo æ­£åœ¨å®‰è£… VSCODE ...
+echo ÕıÔÚ°²×° VSCODE ...
 
 powershell choco install --yes vscode
 echo.
 echo.
 echo.
-echo å¼€å§‹å¯ç”¨WINDOWSåŠŸèƒ½ç»„ä»¶ 
+echo ¿ªÊ¼ÆôÓÃWINDOWS¹¦ÄÜ×é¼ş 
 echo ===============================
 echo.       
-echo å¼€å¯è™šæ‹ŸæœºåŠŸèƒ½ ...
+echo ¿ªÆôĞéÄâ»ú¹¦ÄÜ ...
 powershell dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 echo.        
-echo å¼€å¯Hyper-V ...
+echo ¿ªÆôHyper-V ...
 powershell dism.exe /online /enable-feature /featurename:HypervisorPlatform /all /norestart
 echo.    
-echo å¼€å¯WSL ...
+echo ¿ªÆôWSL ...
 powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 echo.
 echo.
-echo å¼€å§‹å¯ç”¨WINDOWSåŠŸèƒ½ç»„ä»¶ 
+echo ¿ªÊ¼ÆôÓÃWINDOWS¹¦ÄÜ×é¼ş 
 echo ===============================
 echo.
-echo å¼€å§‹å¯ç”¨è™šæ‹Ÿå¹³å° ...
+echo ¿ªÊ¼ÆôÓÃĞéÄâÆ½Ì¨ ...
 powershell Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
 echo.
 echo.
-echo å¼€å§‹å¯ç”¨WSL ...
+echo ¿ªÊ¼ÆôÓÃWSL ...
 powershell Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 
 ::Add script to Run key
@@ -106,41 +106,41 @@ reg delete HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v %~n0 /f
 del %~dp0current.txt
 echo.
 echo.
-echo å‡çº§WSL2 ...
+echo Éı¼¶WSL2 ...
 start /wait powershell curl https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi -o wsl_update_x64.msi
 powershell msiexec /i wsl_update_x64.msi /qn
 echo.
 echo.
-echo è®¾ç½®wslé»˜è®¤ç‰ˆæœ¬ä¸º2
+echo ÉèÖÃwslÄ¬ÈÏ°æ±¾Îª2
 powershell wsl --set-default-version 2
 echo.
 if not exist %FILE_NAME% (
-echo ä¸‹è½½ CENTOS FOR WSL 7.0 ...
+echo ÏÂÔØ CENTOS FOR WSL 7.0 ...
 echo.
 start /wait powershell curl %FILE_URL% -o %FILE_NAME%
 echo.
 )
 if not exist %WSL_FILE%.exe (
-echo è§£å‹ç¼© ...
+echo ½âÑ¹Ëõ ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
 )
 echo.
-echo å¼€å§‹å®‰è£…centosåˆ°WSLä¸­ ...
+echo ¿ªÊ¼°²×°centosµ½WSLÖĞ ...
 echo.
 powershell .\%WSL_FILE%.exe < nul
 powershell wsl -s %WSL_FILE%
 echo.
 echo.
-echo å¼€å§‹åˆ›å»ºdockeråŸºç¡€æ–‡ä»¶ç¯å¢ƒ ...
+echo ¿ªÊ¼´´½¨docker»ù´¡ÎÄ¼ş»·¾³ ...
 echo.
 powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd /%WSL_FILE% && yum install git -y && git clone %DOCKERBOTA%  ./ && cp .env-example .env && mv build.bat build.sh \"
 echo.
 echo.
 echo.
-echo è¯·åœ¨dockerä¸­å°†wslå…³è”çš„%WSL_FILE%é•œåƒè®¾å®šä¸ºæ‰“å¼€çŠ¶æ€å
-echo è¿è¡Œ wsl -d %WSL_FILE%,å¹¶è¿›å…¥/%WSL_FILE%ç›®å½•ä¸­è¿è¡Œ sh build.sh
-echo å®Œæˆå®å¡”çš„å®‰è£…
+echo ÇëÔÚdockerÖĞ½«wsl¹ØÁªµÄ%WSL_FILE%¾µÏñÉè¶¨Îª´ò¿ª×´Ì¬ºó
+echo ÔËĞĞ wsl -d %WSL_FILE%,²¢½øÈë/%WSL_FILE%Ä¿Â¼ÖĞÔËĞĞ sh build.sh
+echo Íê³É±¦ËşµÄ°²×°
 :END
 
 goto :eof
