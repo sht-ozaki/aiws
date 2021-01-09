@@ -187,8 +187,7 @@ echo 运行 wsl -d %WSL_FILE%,并进入/%WSL_FILE%目录中运行 sh build.sh
 echo.
 echo.
 echo 进入baota CENTOS环境 ...
-powershell .\%WSL_FILE%.exe run \"sh build.sh"
-
+powershell .\%WSL_FILE%.exe run \"sh build.sh\"
 echo.
 echo.
 echo 完成宝塔的安装!
