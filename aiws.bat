@@ -172,7 +172,7 @@ echo.
 echo.
 echo 开始创建docker基础文件环境 ...[%WSL_FILE%.exe]
 echo.
-powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd /%WSL_FILE% && yum install git -y && git clone %DOCKERBOTA%  ./ && cp .env-example .env && mv build.bat build.sh \"
+powershell .\%WSL_FILE%.exe run \"[ -d /%WSL_FILE% ] || mkdir /%WSL_FILE% && cd /%WSL_FILE% && yum install git -y && git clone %DOCKERBOTA%  ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh \"
 echo.
 echo.
 echo.
