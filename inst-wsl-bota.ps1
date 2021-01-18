@@ -12,12 +12,7 @@ $runscript = $matches[1]
 if ($matches.count -le 0) {
     exit;
 }
-Write-Output $runscript
-# $driveLetter = Read-Host "输入要安装的盘符 ($dvs/quit(默认))"
-# if (driveLetter -eq '') {
-#     exit;
-# }
-
+# Write-Output $runscript
 function Set-Key([string]$path, [string]$key, [string]$value) {
     Set-ItemProperty -Path $path -Name $key -Value $value
 }
@@ -165,7 +160,7 @@ function step2(){
 
     Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
     wsl -s $wsl
-    Start-Process ".\$wsl" -wait -NoNewWindow -ArgumentList "run yum install git -y ; [ -d /$wsl ]||mkdir /$wsl;cd /$wsl;echo haha > haha.txt"
+    Start-Process ".\$wsl" -wait -NoNewWindow -ArgumentList "run yum install git -y ; yum install -y wget ; wget -O install.sh http://download.bt.cn/install/install_6.0.sh ; yes y | sh install.sh "
 }
 
 function init() {
@@ -177,6 +172,14 @@ function init() {
             Write-Output "`n WSL安装第二阶段 `n====================="
             Write-Output $runPath
             step2
+            $param = "step3"
+            init
+            # $SecureInput = Read-Host -Prompt "`n安装完成，按任意键进入第三阶段..." -AsSecureString
+        }
+        "step3" {
+            Write-Output "`n WSL安装第三阶段 `n====================="
+            Write-Output $runPath
+            clearFile
             $SecureInput = Read-Host -Prompt "`n安装完成，按任意键继续..." -AsSecureString
 
         }
@@ -184,6 +187,30 @@ function init() {
             startInst;
         }
     }
+}
+
+function clearFile(){
+    $runPath = $PSCommandPath | Split-Path -Parent;
+    cd $runPath
+    Remove-Item -Path ".\wsl_update_x64.msi" -Force
+    Remove-Item -Path ".\$wsl.zip" -Force
+    Remove-Item -Path ".\inst-wsl-bota.ps1" -Force
+    if (!(Test-Path ".\autorunwsl.zip")) {
+        Write-Output "`n下载 WSL自动运行脚本 ..."
+        $downfile = "--no-check-certificate https://github.com/troytse/wsl-autostart/archive/master.zip -O .\autorunwsl.zip"
+    downloadFile($downfile);
+    }
+    if (Test-Path ".\autorunwsl.zip") {
+        Write-Output "`n解压缩 ..."
+        Expand-Archive -Force "autorunwsl.zip" "$runPath"
+    }
+
+    if (Test-Path ".\wsl-autostart-master\start.vbs") {
+        Write-Output "`n自动设置启动项 ..."
+        Set-Key $regrun "WSLAutostart" "$runPath\wsl-autostart-master\start.vbs"
+        Write-Output "/etc/init.d/bt" "/etc/init.d/mysqld" "/etc/init.d/nginx" "/etc/init.d/php-fpm-74" "/etc/init.d/mount" "/etc/init.d/sshd" | Out-File -FilePath ".\wsl-autostart-master\commands.txt"
+    }
+    Remove-Item -Path ".\autorunwsl.zip" -Force
 }
 
 init
