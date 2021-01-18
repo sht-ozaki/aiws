@@ -36,7 +36,7 @@ goto :eof
 setlocal
 :one
 
- 
+
 SET /P AREYOUSURE=是否开始安装 (Y/[N])?
 IF /I "%AREYOUSURE%" NEQ "Y" GOTO END
 echo.
@@ -91,20 +91,20 @@ powershell choco install --yes vscode
 echo.
 echo.
 echo.
-echo 开始启用WINDOWS功能组件 
+echo 开始启用WINDOWS功能组件
 echo ===============================
-echo.       
+echo.
 echo 开启虚拟机功能 ...
 powershell dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-echo.        
+echo.
 echo 开启Hyper-V ...
 powershell dism.exe /online /enable-feature /featurename:HypervisorPlatform /all /norestart
-echo.    
+echo.
 echo 开启WSL ...
 powershell dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 echo.
 echo.
-echo 开始启用WINDOWS功能组件 
+echo 开始启用WINDOWS功能组件
 echo ===============================
 echo.
 echo 开始启用虚拟平台 ...
@@ -140,14 +140,14 @@ echo.
 if not exist %FILE_NAME% (
 echo 下载 CENTOS FOR WSL 7.0 ...
 echo.
-wget  --no-check-certificate "%FILE_URL%" -O "%FILE_NAME%"
+wget --no-check-certificate "%FILE_URL%" -O "%FILE_NAME%"
 echo.
-) 
+)
 if not exist %WSL_FILE%.exe (
 echo 解压缩 ...
 echo.
 powershell Expand-Archive -Force %FILE_NAME% "./" && powershell Rename-Item %CENTOS_EXE% %WSL_FILE%.exe
-) 
+)
 
 If not exist DockerDesktopInstaller.exe (
 echo 下载 DOCKER DESKTOP ...
@@ -156,7 +156,7 @@ wget  --no-check-certificate "https://desktop.docker.com/win/stable/Docker Deskt
 echo.
 echo.
 echo.
-) 
+)
 
 If exist DockerDesktopInstaller.exe (
 echo 开始安装docker桌面运行程序 ...
@@ -186,7 +186,7 @@ goto :eof
 
 :finish
 powershell wsl -l -v
-echo. 
+echo.
 echo 请务必等待docker服务运行后再继续!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo.
 echo 请在docker中将Settings\Resources\WSL INTEGRATION\%WSL_FILE%镜像设定为打开状态并应用修改后继续 ...
