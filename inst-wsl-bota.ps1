@@ -40,7 +40,7 @@ function RestartandRun([string]$run) {
 
 }
 
-function downloadFile($url){
+function downloadFile($url) {
     Start-Process wget -wait -NoNewWindow -PassThru -ArgumentList $url
 }
 function startInst() {
@@ -132,7 +132,7 @@ function setChoco {
     RestartandRun "$installDev step2"
 }
 
-function step2(){
+function step2() {
     $runPath = $PSCommandPath | Split-Path -Parent;
     cd $runPath
     Write-Output "`n升级WSL2 ..."
@@ -153,14 +153,13 @@ function step2(){
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
+        Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
+        "`n" | & ".\$wsl"
+        Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
+        wsl -s $wsl
     }
 
-    Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
-    "`n" | & ".\$wsl"
-
-    Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
-    wsl -s $wsl
-    Start-Process ".\$wsl" -wait -NoNewWindow -ArgumentList "run yum install git -y ; yum install -y wget ; wget -O install.sh http://download.bt.cn/install/install_6.0.sh ; yes y | sh install.sh "
+    clearFile
 }
 
 function init() {
@@ -172,16 +171,10 @@ function init() {
             Write-Output "`n WSL安装第二阶段 `n====================="
             Write-Output $runPath
             step2
-            $param = "step3"
-            init
             # $SecureInput = Read-Host -Prompt "`n安装完成，按任意键进入第三阶段..." -AsSecureString
         }
         "step3" {
-            Write-Output "`n WSL安装第三阶段 `n====================="
-            Write-Output $runPath
             clearFile
-            $SecureInput = Read-Host -Prompt "`n安装完成，按任意键继续..." -AsSecureString
-
         }
         default {
             startInst;
@@ -189,19 +182,28 @@ function init() {
     }
 }
 
-function clearFile(){
+function clearFile() {
+    Write-Output "`n WSL安装第三阶段 `n====================="
+    Write-Output $runPath
+
     $runPath = $PSCommandPath | Split-Path -Parent;
     cd $runPath
+
+    Write-Output "`n`n安装宝塔系统 ...`n"
+    wsl sh -c "yum install git -y && yum install -y wget && wget -O install.sh http://download.bt.cn/install/install_6.0.sh && yes y | sh install.sh"
+
+    Write-Output "`n`n清除残余文件 ...`n"
     Remove-Item -Path ".\wsl_update_x64.msi" -Force
     Remove-Item -Path ".\$wsl.zip" -Force
     Remove-Item -Path ".\inst-wsl-bota.ps1" -Force
+    Remove-Item -Path ".\install.sh" -Force
     if (!(Test-Path ".\autorunwsl.zip")) {
-        Write-Output "`n下载 WSL自动运行脚本 ..."
+        Write-Output "`n`n下载 WSL自动运行脚本 ..."
         $downfile = "--no-check-certificate https://github.com/troytse/wsl-autostart/archive/master.zip -O .\autorunwsl.zip"
-    downloadFile($downfile);
+        downloadFile($downfile);
     }
     if (Test-Path ".\autorunwsl.zip") {
-        Write-Output "`n解压缩 ..."
+        Write-Output "`n脚本解压缩 ..."
         Expand-Archive -Force "autorunwsl.zip" "$runPath"
     }
 
@@ -211,6 +213,8 @@ function clearFile(){
         Write-Output "/etc/init.d/bt" "/etc/init.d/mysqld" "/etc/init.d/nginx" "/etc/init.d/php-fpm-74" "/etc/init.d/mount" "/etc/init.d/sshd" | Out-File -FilePath ".\wsl-autostart-master\commands.txt"
     }
     Remove-Item -Path ".\autorunwsl.zip" -Force
+    Write-Host -NoNewLine "`n安装完成，按任意键结束..."
+    $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 init
