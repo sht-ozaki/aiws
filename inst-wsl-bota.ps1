@@ -4,10 +4,19 @@ $centosExe = "CentOS7.exe"
 $installDev = "C"
 $wsl = "baota"
 $param = $args[0]
-$runPath = $PSCommandPath | Split-Path -Parent
 $regrun = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 $restartkey = "RestartAndResume"
-
+$runPath = $PSCommandPath | Split-Path -Parent
+$runscript = $MyInvocation.MyCommand.Scriptblock -match '(http(.*)\.ps1)'
+$runscript = $matches[1]
+if ($matches.count -le 0) {
+    exit;
+}
+Write-Output $runscript
+# $driveLetter = Read-Host "输入要安装的盘符 ($dvs/quit(默认))"
+# if (driveLetter -eq '') {
+#     exit;
+# }
 
 function Set-Key([string]$path, [string]$key, [string]$value) {
     Set-ItemProperty -Path $path -Name $key -Value $value
@@ -80,9 +89,11 @@ function startInst() {
     if (Test-Path ".\inst-wsl-bota.ps1") {
         del ".\inst-wsl-bota.ps1"
     }
-    Invoke-WebRequest -Uri "$PSCommandPath" -OutFile ".\inst-wsl-bota.ps1"
+    # Invoke-WebRequest -Uri "$PSCommandPath" -OutFile ".\inst-wsl-bota.ps1"
+    Invoke-WebRequest -Uri "$runscript" -OutFile ".\inst-wsl-bota.ps1"
+    # Write-Output $runscript | Out-File -FilePath ".\inst-wsl-bota.ps1"
     $installDev += "\inst-wsl-bota.ps1"
-    Write-Output $installDev | Out-File -FilePath ".\inst-wsl-bota.txt"
+    # Write-Output $installDev | Out-File -FilePath ".\inst-wsl-bota.txt"
     setChoco;
 }
 function setChoco {
