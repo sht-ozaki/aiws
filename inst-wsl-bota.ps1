@@ -6,7 +6,7 @@ $wsl = "baota"
 $param = $args[0]
 $regrun = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 $restartkey = "RestartAndResume"
-$runPath = $PSCommandPath | Split-Path -Parent
+$runPath = ""
 $runscript = $MyInvocation.MyCommand.Scriptblock -match '(http(.*)\.ps1)'
 $runscript = $matches[1]
 if ($matches.count -le 0) {
@@ -138,6 +138,7 @@ function setChoco {
 }
 
 function step2(){
+    $runPath = $PSCommandPath | Split-Path -Parent;
     cd $runPath
     Write-Output "`n升级WSL2 ..."
     if (!(Test-Path ".\wsl_update_x64.msi")) {
