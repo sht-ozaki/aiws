@@ -34,7 +34,7 @@ function ClearAnyRestart([string]$key = $restartkey) {
 
 #powershell "start-process PowerShell -verb runas -argument 'D:\bota\inst-wsl-bota.ps1 B'"
 function RestartandRun([string]$run) {
-    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$run'"
+    Set-Key $regrun $restartkey "powershell -ExecutionPolicy AllSigned start-process PowerShell -verb runas -argument '$run'"
     Restart-Computer
     exit
 
