@@ -1,4 +1,4 @@
-﻿$hello = "现在开始准备安装系统环境`nAIWS主要用于基于Centos和docker的前端开发和后台开发环境`n其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等`n它需要使用到管理员权限以安装来自微软的官方补丁`n及下载必要的系统组件，请使用或同意脚本的管理身份请求!`n"
+$hello = "现在开始准备安装系统环境`nAIWS主要用于基于Centos和docker的前端开发和后台开发环境`n其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等`n它需要使用到管理员权限以安装来自微软的官方补丁`n及下载必要的系统组件，请使用或同意脚本的管理身份请求!`n"
 $centosFile = "https://github.com/wsldl-pg/CentWSL/releases/download/7.0.1907.3/CentOS7.zip"
 $centosExe = "CentOS7.exe"
 $installDev = "C"
@@ -32,6 +32,9 @@ function ClearAnyRestart([string]$key = $restartkey) {
         Remove-key $regrun $key
     }
 }
+
+function PSCommandPath() { return $PSCommandPath; }
+function ScriptName() { return $MyInvocation.ScriptName; }
 
 
 #powershell "start-process PowerShell -verb runas -argument 'D:\bota\inst-wsl-docker-bota.ps1 B'"
@@ -145,7 +148,7 @@ function step2() {
     msiexec /i wsl_update_x64.msi /qn
     Write-Output "升级WSL2完成！"
     Write-Output "`n设置wsl默认版本为2 ..."
-    powershell wsl --set-default-version 2
+    wsl --set-default-version 2
 
     if (!(Test-Path ".\DockerDesktopInstaller.exe")) {
         Write-Output "`n下载 DOCKER DESKTOP ..."
@@ -160,20 +163,22 @@ function step2() {
         $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
         downloadFile($downfile);
     }
+
     if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
+    
+    }
         Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
         "`n" | & ".\$wsl"
         Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
         wsl -s $wsl
         Write-Output "`n`n开始创建docker基础文件环境 ...`n"
         wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
-    }
-
-    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument 'clearFile'"
-    clearFile
+    
+    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearfile'"
+    clearfile
 }
 
 function init() {
@@ -196,7 +201,7 @@ function init() {
     }
 }
 
-function clearFile() {
+function clearfile() {
     Write-Output "`n WSL安装第三阶段 `n====================="
     Write-Output $runPath
 
@@ -211,10 +216,10 @@ function clearFile() {
     wsl sh -c "cd /$wsl && sh build.sh"
 
     Write-Output "`n`n清除残余文件 ...`n"
-    Remove-Item -Path ".\wsl_update_x64.msi" -Force
-    Remove-Item -Path ".\$wsl.zip" -Force
-    Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
-    Remove-Item -Path ".\install.sh" -Force
+    #Remove-Item -Path ".\wsl_update_x64.msi" -Force
+    #Remove-Item -Path ".\$wsl.zip" -Force
+    #Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
+    #Remove-Item -Path ".\install.sh" -Force
 
 
     Remove-Item -Path ".\autorunwsl.zip" -Force
