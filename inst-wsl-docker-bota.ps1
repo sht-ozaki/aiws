@@ -33,9 +33,6 @@ function ClearAnyRestart([string]$key = $restartkey) {
     }
 }
 
-function PSCommandPath() { return $PSCommandPath; }
-function ScriptName() { return $MyInvocation.ScriptName; }
-
 
 #powershell "start-process PowerShell -verb runas -argument 'D:\bota\inst-wsl-docker-bota.ps1 B'"
 function RestartandRun([string]$run) {
@@ -48,6 +45,10 @@ function RestartandRun([string]$run) {
 function downloadFile($url) {
     Start-Process wget -wait -NoNewWindow -PassThru -ArgumentList $url
 }
+
+function PSCommandPath() { return $PSCommandPath; }
+function ScriptName() { return $MyInvocation.ScriptName; }
+
 function startInst() {
     Write-Output $hello
     # $confirmation = Read-Host "是否继续安装程序？[y(默认)/n]"
@@ -96,6 +97,8 @@ function startInst() {
     # Write-Output $installDev | Out-File -FilePath ".\inst-wsl-docker-bota.txt"
     setChoco;
 }
+
+
 function setChoco {
     Write-Output "`n正在安装 choco ...`n"
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
@@ -148,7 +151,7 @@ function step2() {
     msiexec /i wsl_update_x64.msi /qn
     Write-Output "升级WSL2完成！"
     Write-Output "`n设置wsl默认版本为2 ..."
-    wsl --set-default-version 2
+    powershell wsl --set-default-version 2
 
     if (!(Test-Path ".\DockerDesktopInstaller.exe")) {
         Write-Output "`n下载 DOCKER DESKTOP ..."
@@ -163,22 +166,20 @@ function step2() {
         $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
         downloadFile($downfile);
     }
-
     if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
-    
-    }
         Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
         "`n" | & ".\$wsl"
         Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
         wsl -s $wsl
         Write-Output "`n`n开始创建docker基础文件环境 ...`n"
         wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
-    
-    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath step3'"
-    step3
+    }
+
+    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearFile'"
+    clearFile
 }
 
 function init() {
@@ -193,7 +194,7 @@ function init() {
             # $SecureInput = Read-Host -Prompt "`n安装完成，按任意键进入第三阶段..." -AsSecureString
         }
         "step3" {
-            step3
+            clearFile
         }
         default {
             startInst;
@@ -201,14 +202,11 @@ function init() {
     }
 }
 
-function step3() {
-	$runPath = $PSCommandPath | Split-Path -Parent;
+function clearFile() {
+    $runPath = $PSCommandPath | Split-Path -Parent;
     cd $runPath
     Write-Output "`n WSL安装第三阶段 `n====================="
     Write-Output $runPath
-
-    $runPath = $PSCommandPath | Split-Path -Parent;
-    cd $runPath
 
     Write-Host -NoNewLine "`n请务必等待docker服务运行后再继续!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`n`n"
     $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
@@ -218,10 +216,10 @@ function step3() {
     wsl sh -c "cd /$wsl && sh build.sh"
 
     Write-Output "`n`n清除残余文件 ...`n"
-    #Remove-Item -Path ".\wsl_update_x64.msi" -Force
-    #Remove-Item -Path ".\$wsl.zip" -Force
-    #Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
-    #Remove-Item -Path ".\install.sh" -Force
+    Remove-Item -Path ".\wsl_update_x64.msi" -Force
+    Remove-Item -Path ".\$wsl.zip" -Force
+    Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
+    Remove-Item -Path ".\install.sh" -Force
 
 
     Remove-Item -Path ".\autorunwsl.zip" -Force
