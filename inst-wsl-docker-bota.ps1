@@ -177,8 +177,8 @@ function step2() {
         Write-Output "`n`n开始创建docker基础文件环境 ...`n"
         wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
     
-    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearfile'"
-    clearfile
+    Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath step3'"
+    step3
 }
 
 function init() {
@@ -193,7 +193,7 @@ function init() {
             # $SecureInput = Read-Host -Prompt "`n安装完成，按任意键进入第三阶段..." -AsSecureString
         }
         "step3" {
-            clearFile
+            step3
         }
         default {
             startInst;
@@ -201,7 +201,9 @@ function init() {
     }
 }
 
-function clearfile() {
+function step3() {
+	$runPath = $PSCommandPath | Split-Path -Parent;
+    cd $runPath
     Write-Output "`n WSL安装第三阶段 `n====================="
     Write-Output $runPath
 
