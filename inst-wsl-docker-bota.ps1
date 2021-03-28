@@ -4,7 +4,7 @@ $centosExe = "CentOS7.exe"
 $installDev = "C"
 $wsl = "baota"
 $DOCKERBOTA = "https://github.com/dooioomoo/docker-bota.git"
-$DOCKERDOWNLOAD = "https://desktop.docker.com/win/stable/Docker Desktop Installer.exe"
+$DOCKERDOWNLOAD = [uri]::EscapeUriString("https://desktop.docker.com/win/stable/Docker%20Desktop%20Installer.exe")
 $param = $args[0]
 $regrun = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 $restartkey = "RestartAndResume"
@@ -149,7 +149,7 @@ function step2() {
 
     if (!(Test-Path ".\DockerDesktopInstaller.exe")) {
         Write-Output "`n下载 DOCKER DESKTOP ..."
-        $downfile = "--no-check-certificate $DOCKERDOWNLOAD -O 'DockerDesktopInstaller.exe'"
+        $downfile = "--no-check-certificate $DOCKERDOWNLOAD -O DockerDesktopInstaller.exe"
         downloadFile($downfile);
          Write-Output "`n开始安装docker桌面运行程序 ...`n==========================================="
         "`n" | & ".\DockerDesktopInstaller.exe"
