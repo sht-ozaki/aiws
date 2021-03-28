@@ -170,13 +170,14 @@ function step2() {
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
-        Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
-        "`n" | & ".\$wsl"
-        Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
-        wsl -s $wsl
-        Write-Output "`n`n开始创建docker基础文件环境 ...`n"
-        wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
     }
+    
+    Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
+    "`n" | & ".\$wsl"
+    Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
+    wsl -s $wsl
+    Write-Output "`n`n开始创建docker基础文件环境 ...`n"
+    wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
 
     Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearFile'"
     clearFile
