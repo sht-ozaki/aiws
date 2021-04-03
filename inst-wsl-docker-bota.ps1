@@ -166,11 +166,14 @@ function step2() {
         $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
         downloadFile($downfile);
     }
+    
     if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
     }
+    
+    if ((Test-Path ".\$wsl.exe")) {
     
     Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
     "`n" | & ".\$wsl"
@@ -178,7 +181,9 @@ function step2() {
     wsl -s $wsl
     Write-Output "`n`n开始创建docker基础文件环境 ...`n"
     wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
-
+    
+    }
+     
     Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearFile'"
     clearFile
 }
@@ -217,13 +222,13 @@ function clearFile() {
     wsl sh -c "cd /$wsl && sh build.sh"
 
     Write-Output "`n`n清除残余文件 ...`n"
-    Remove-Item -Path ".\wsl_update_x64.msi" -Force
-    Remove-Item -Path ".\$wsl.zip" -Force
-    Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
-    Remove-Item -Path ".\install.sh" -Force
+    #Remove-Item -Path ".\wsl_update_x64.msi" -Force
+    #Remove-Item -Path ".\$wsl.zip" -Force
+    #Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
+    #Remove-Item -Path ".\install.sh" -Force
 
 
-    Remove-Item -Path ".\autorunwsl.zip" -Force
+    #Remove-Item -Path ".\autorunwsl.zip" -Force
     Write-Host -NoNewLine "`n安装完成，按任意键结束..."
     $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
