@@ -43,7 +43,7 @@ function RestartandRun([string]$run) {
 }
 
 function downloadFile($url) {
-    Start-Process wget -wait -NoNewWindow -PassThru -ArgumentList $url
+    Start-Process wget -Wait -NoNewWindow -PassThru -ArgumentList $url
 }
 
 function PSCommandPath() { return $PSCommandPath; }
@@ -158,32 +158,9 @@ function step2() {
         $downfile = "--no-check-certificate $DOCKERDOWNLOAD -O DockerDesktopInstaller.exe"
         downloadFile($downfile);
          Write-Output "`n开始安装docker桌面运行程序 ...`n==========================================="
-        "`n" | & ".\DockerDesktopInstaller.exe"
-    }
-
-    if (!(Test-Path ".\$wsl.zip")) {
-        Write-Output "`n下载 CENTOS FOR WSL 7.0 ..."
-        $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
-        downloadFile($downfile);
-    }
-    
-    if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
-        Write-Output "`n解压缩 ..."
-        Expand-Archive -Force "$wsl.zip" "$runPath"
-        Rename-Item "$centosExe" "$wsl.exe"
-    }
-    
-    if ((Test-Path ".\$wsl.exe")) {
-    
-    Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
-    "`n" | & ".\$wsl"
-    Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
-    wsl -s $wsl
-    Write-Output "`n`n开始创建docker基础文件环境 ...`n"
-    wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
-    
-    }
-     
+        #"`n" | & ".\DockerDesktopInstaller.exe"
+        Start-Process .\DockerDesktopInstaller.exe -Wait -NoNewWindow -PassThru
+    }     
     Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearFile'"
     clearFile
 }
@@ -213,9 +190,32 @@ function clearFile() {
     cd $runPath
     Write-Output "`n WSL安装第三阶段 `n====================="
     Write-Output $runPath
-
+    
     Write-Host -NoNewLine "`n请务必等待docker服务运行后再继续!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`n`n"
     $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    
+    if (!(Test-Path ".\$wsl.zip")) {
+        Write-Output "`n下载 CENTOS FOR WSL 7.0 ..."
+        $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
+        downloadFile($downfile);
+    }
+    
+    if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
+        Write-Output "`n解压缩 ..."
+        Expand-Archive -Force "$wsl.zip" "$runPath"
+        Rename-Item "$centosExe" "$wsl.exe"
+    }
+    
+    if ((Test-Path ".\$wsl.exe")) {
+    
+    Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
+    "`n" | & ".\$wsl"
+    Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
+    wsl -s $wsl
+    Write-Output "`n`n开始创建docker基础文件环境 ...`n"
+    wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
+    
+    }
 
     Write-Output "`n`n安装宝塔系统 ...`n"
 
