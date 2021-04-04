@@ -1,4 +1,4 @@
-$hello = "现在开始准备安装系统环境`nAIWS主要用于基于Centos和docker的前端开发和后台开发环境`n其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等`n它需要使用到管理员权限以安装来自微软的官方补丁`n及下载必要的系统组件，请使用或同意脚本的管理身份请求!`n"
+﻿$hello = "现在开始准备安装系统环境`nAIWS主要用于基于Centos和docker的前端开发和后台开发环境`n其中包括WSL2\DOCKER\VSCODE\GIT\COMPOSER\BOTA...等`n它需要使用到管理员权限以安装来自微软的官方补丁`n及下载必要的系统组件，请使用或同意脚本的管理身份请求!`n"
 $centosFile = "https://github.com/wsldl-pg/CentWSL/releases/download/7.0.1907.3/CentOS7.zip"
 $centosExe = "CentOS7.exe"
 $installDev = "C"
@@ -43,7 +43,7 @@ function RestartandRun([string]$run) {
 }
 
 function downloadFile($url) {
-    Start-Process wget -Wait -NoNewWindow -PassThru -ArgumentList $url
+    Start-Process wget -wait -NoNewWindow -PassThru -ArgumentList $url
 }
 
 function PSCommandPath() { return $PSCommandPath; }
@@ -159,8 +159,11 @@ function step2() {
         downloadFile($downfile);
          Write-Output "`n开始安装docker桌面运行程序 ...`n==========================================="
         #"`n" | & ".\DockerDesktopInstaller.exe"
-        Start-Process .\DockerDesktopInstaller.exe -Wait -NoNewWindow -PassThru
-    }     
+        Start-Process ".\DockerDesktopInstaller.exe" -wait -NoNewWindow -PassThru
+    }
+
+    
+
     Set-Key $regrun $restartkey "powershell start-process PowerShell -verb runas -argument '$PSCommandPath clearFile'"
     clearFile
 }
@@ -190,7 +193,7 @@ function clearFile() {
     cd $runPath
     Write-Output "`n WSL安装第三阶段 `n====================="
     Write-Output $runPath
-    
+
     Write-Host -NoNewLine "`n请务必等待docker服务运行后再继续!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`n`n"
     $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     
@@ -199,22 +202,17 @@ function clearFile() {
         $downfile = "--no-check-certificate $centosFile -O $wsl.zip"
         downloadFile($downfile);
     }
-    
     if ((Test-Path ".\$wsl.zip") -and !(Test-Path ".\$wsl.exe")) {
         Write-Output "`n解压缩 ..."
         Expand-Archive -Force "$wsl.zip" "$runPath"
         Rename-Item "$centosExe" "$wsl.exe"
-    }
-    
-    if ((Test-Path ".\$wsl.exe")) {
-    
-    Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
-    "`n" | & ".\$wsl"
-    Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
-    wsl -s $wsl
-    Write-Output "`n`n开始创建docker基础文件环境 ...`n"
-    wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
-    
+        Write-Output "`n开始安装centos到WSL中 ...`n==========================================="
+       # "`n" | & ".\$wsl"
+        Start-Process ".\$wsl" -wait -NoNewWindow -PassThru
+        Write-Output "`n`n设置默认WSL镜像为 [$wsl] ...`n"
+        wsl -s $wsl
+        Write-Output "`n`n开始创建docker基础文件环境 ...`n"
+        wsl sh -c "[ -d /$wsl ] || mkdir /$wsl && cd /$wsl && yum install git -y && git clone $DOCKERBOTA ./ && cp .env-example .env && mv build.bat build.sh && source instsys.sh"
     }
 
     Write-Output "`n`n安装宝塔系统 ...`n"
@@ -222,7 +220,13 @@ function clearFile() {
     wsl sh -c "cd /$wsl && sh build.sh"
 
     Write-Output "`n`n清除残余文件 ...`n"
+    Remove-Item -Path ".\wsl_update_x64.msi" -Force
+    #Remove-Item -Path ".\$wsl.zip" -Force
+    Remove-Item -Path ".\inst-wsl-docker-bota.ps1" -Force
+    #Remove-Item -Path ".\install.sh" -Force
 
+
+    #Remove-Item -Path ".\autorunwsl.zip" -Force
     Write-Host -NoNewLine "`n安装完成，按任意键结束..."
     $null = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
